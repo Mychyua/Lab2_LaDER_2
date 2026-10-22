@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t.site_title }}</title>
+    <link rel="stylesheet" href="{% static 'movies/css/style.css' %}">
+</head>
+<body class="theme-{{ theme }}">
+
+    <header>
+        <h1>{{ t.site_title }}</h1>
+        <nav class="settings">
+            <span>{{ t.theme_label }}
+                <a href="?set_theme=light&genre={{ selected_genre }}">{{ t.light }}</a> |
+                <a href="?set_theme=dark&genre={{ selected_genre }}">{{ t.dark }}</a>
+            </span>
+            <span>{{ t.lang_label }}
+                <a href="?set_lang=ru&genre={{ selected_genre }}">RU</a> |
+                <a href="?set_lang=en&genre={{ selected_genre }}">EN</a>
+            </span>
+        </nav>
+    </header>
+
+    <main>
+        <h2>{{ t.heading }}</h2>
+
+        <form method="get" class="genre-form">
+            {{ form.genre }}
+            <button type="submit">{{ t.submit }}</button>
+        </form>
+
+        <div class="movies-grid">
+            {% for movie in movies %}
+            <div class="movie-card">
+                <img src="{% static 'movies/' %}{{ movie.image }}" alt="{{ movie.display_title }}">
+                <div class="movie-info">
+                    <h3>{{ movie.display_title }}</h3>
+                    <p class="genre-tag">{{ movie.display_genre }}</p>
+                    <p class="description">{{ movie.display_description }}</p>
+                    <p class="year">{{ t.year }}: {{ movie.year }}</p>
+                </div>
+                <a href="{{ movie.video_url }}" target="_blank" class="watch-btn">{{ t.watch_trailer }}</a>
+            </div>
+            {% empty %}
+            <p class="no-movies">{{ t.no_movies }}</p>
+            {% endfor %}
+        </div>
+
+        {% if recent_pages %}
+        <section class="recent">
+            <h3>{{ t.recent }}</h3>
+            <div class="recent-tags">
+                {% for page in recent_pages %}
+                <a href="?{{ page.url }}" class="recent-tag">{{ page.display }}</a>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+</body>
+</html>
